@@ -217,9 +217,9 @@ Qed.
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  intros n m. induction m as [ | m IHn].
+  intros n m. induction m.
   - simpl. rewrite <- plus_n_O. reflexivity.
-  - rewrite <- plus_n_Sm. simpl. rewrite -> IHn. reflexivity.
+  - rewrite <- plus_n_Sm. simpl. rewrite -> IHm. reflexivity.
 Qed.
 
 Theorem plus_assoc : forall n m p : nat,
