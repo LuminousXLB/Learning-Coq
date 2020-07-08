@@ -956,7 +956,13 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m o.
+  intros Hnm.
+  intros Hmo.
+  rewrite -> Hnm.
+  rewrite <- Hmo.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** The [Admitted] command tells Coq that we want to skip trying
@@ -988,9 +994,8 @@ Theorem mult_S_1 : forall n m : nat,
   m = S n ->
   m * (1 + n) = m * m.
 Proof.
-  intros n m.
-  intros H.
-  rewrite -> plus_1_l.
+  intros n m H.
+  rewrite -> (plus_1_l n).
   rewrite -> H.
   reflexivity.
 Qed.
@@ -1221,14 +1226,23 @@ Qed.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c.
+  destruct b eqn:Eb.
+  - simpl. intros H. rewrite -> H. reflexivity.
+  - simpl. destruct c eqn:Ec.
+    + intros H. reflexivity.
+    + intros H. rewrite -> H. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (zero_nbeq_plus_1)  *)
 Theorem zero_nbeq_plus_1 : forall n : nat,
   0 =? (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [].
+  - reflexivity.
+  - reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -1314,7 +1328,11 @@ Fixpoint plus' (n : nat) (m : nat) : nat :=
     file!) *)
 
 (* FILL IN HERE
-
+Fixpoint rejected (n : nat) (m : nat) : nat :=
+  match (n - m <? 5) with
+  | true => m
+  | false => rejected n (plus' m n)
+  end.
     [] *)
 
 (* ################################################################# *)
@@ -1335,7 +1353,13 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros f.
+  intros H.
+  intros b.
+  rewrite (H b).
+  rewrite (H b).
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -1345,7 +1369,17 @@ Proof.
     to the previous one but where the second hypothesis says that the
     function [f] has the property that [f x = negb x]. *)
 
-(* FILL IN HERE *)
+Theorem negation_fn_applied_twice :
+  forall (f : bool -> bool),
+  ( forall (x: bool), f x = negb x ) -> forall (b : bool), f (f b) = b.
+Proof.
+  intros f H b.
+  rewrite (H b).
+  rewrite (H (negb b)).
+  rewrite -> negb_involutive.
+  reflexivity.
+Qed.
+
 (* The [Import] statement on the next line tells Coq to use the
    standard library String module.  We'll use strings more in later
    chapters, but for the moment we just need syntax for literal
@@ -1368,7 +1402,12 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [] [].
+  - intros H. reflexivity.
+  - simpl. intros H. rewrite -> H. reflexivity.
+  - simpl. intros H. rewrite -> H. reflexivity.
+  - intros H. reflexivity.
+Qed.
 
 (** [] *)
 
