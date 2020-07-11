@@ -284,7 +284,7 @@ Proof. reflexivity.  Qed.
 (* ----------------------------------------------------------------- *)
 (** *** Exercises *)
 
-(** **** Exercise: 2 stars, standard, recommended (list_funs)  
+(** **** Exercise: 2 stars, standard, recommended (list_funs)
 
     Complete the definitions of [nonzeros], [oddmembers], and
     [countoddmembers] below. Have a look at the tests to understand
@@ -320,7 +320,7 @@ Example test_countoddmembers3:
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, advanced (alternate)  
+(** **** Exercise: 3 stars, advanced (alternate)
 
     Complete the definition of [alternate], which interleaves two
     lists into one, alternating between elements taken from the first
@@ -363,7 +363,7 @@ Example test_alternate4:
 
 Definition bag := natlist.
 
-(** **** Exercise: 3 stars, standard, recommended (bag_functions)  
+(** **** Exercise: 3 stars, standard, recommended (bag_functions)
 
     Complete the following definitions for the functions
     [count], [sum], [add], and [member] for bags. *)
@@ -414,7 +414,7 @@ Example test_member2:             member 2 [1;4;1] = false.
 (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, standard, optional (bag_more_functions)  
+(** **** Exercise: 3 stars, standard, optional (bag_more_functions)
 
     Here are some more [bag] functions for you to practice with. *)
 
@@ -464,7 +464,7 @@ Example test_subset2:              subset [1;2;2] [2;1;4;1] = false.
  (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 2 stars, standard, recommended (bag_theorem)  
+(** **** Exercise: 2 stars, standard, recommended (bag_theorem)
 
     Write down an interesting theorem [bag_theorem] about bags
     involving the functions [count] and [add], and prove it.  Note
@@ -484,7 +484,7 @@ Qed.
 Definition manual_grade_for_bag_theorem : option (nat*string) := None.
 (* Note to instructors: For silly technical reasons, in this
    file (only) you will need to write [Some (Datatypes.pair 3 ""%string)]
-   rather than [Some (3,""%string)] to enter your grade and comments. 
+   rather than [Some (3,""%string)] to enter your grade and comments.
 
     [] *)
 
@@ -799,7 +799,7 @@ Proof.
 (* ================================================================= *)
 (** ** List Exercises, Part 1 *)
 
-(** **** Exercise: 3 stars, standard (list_exercises)  
+(** **** Exercise: 3 stars, standard (list_exercises)
 
     More practice with lists: *)
 
@@ -835,7 +835,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 2 stars, standard (eqblist)  
+(** **** Exercise: 2 stars, standard (eqblist)
 
     Fill in the definition of [eqblist], which compares
     lists of numbers for equality.  Prove that [eqblist l l]
@@ -895,17 +895,17 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, standard, optional (bag_count_sum)  
+(** **** Exercise: 3 stars, standard, optional (bag_count_sum)
 
     Write down an interesting theorem [bag_count_sum] about bags
     involving the functions [count] and [sum], and prove it using
     Coq.  (You may find that the difficulty of the proof depends on
     how you defined [count]!) *)
-(* FILL IN HERE 
+(* FILL IN HERE
 
     [] *)
 
-(** **** Exercise: 4 stars, advanced (rev_injective)  
+(** **** Exercise: 4 stars, advanced (rev_injective)
 
     Prove that the [rev] function is injective -- that is,
 
@@ -999,7 +999,7 @@ Definition option_elim (d : nat) (o : natoption) : nat :=
   | None => d
   end.
 
-(** **** Exercise: 2 stars, standard (hd_error)  
+(** **** Exercise: 2 stars, standard (hd_error)
 
     Using the same idea, fix the [hd] function from earlier so we don't
     have to pass a default element for the [nil] case.  *)
@@ -1017,7 +1017,7 @@ Example test_hd_error3 : hd_error [5;6] = Some 5.
  (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 1 star, standard, optional (option_elim_hd)  
+(** **** Exercise: 1 star, standard, optional (option_elim_hd)
 
     This exercise relates your new [hd_error] to the old [hd]. *)
 
@@ -1065,7 +1065,7 @@ Proof.
 
 Module PartialMap.
 Export NatList.
-  
+
 Inductive partial_map : Type :=
   | empty
   | record (i : id) (v : nat) (m : partial_map).
@@ -1116,7 +1116,7 @@ Proof.
 (** [] *)
 End PartialMap.
 
-(** **** Exercise: 2 stars, standard (baz_num_elts)  
+(** **** Exercise: 2 stars, standard (baz_num_elts)
 
     Consider the following inductive definition: *)
 
