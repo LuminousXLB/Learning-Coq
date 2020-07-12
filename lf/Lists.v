@@ -854,17 +854,32 @@ Proof.
 Theorem app_nil_r : forall l : natlist,
   l ++ [] = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l. induction l as [| h t IHh].
+  - (* l = nil *)
+    reflexivity.
+  - (* l = h :: t, t ++ [ ] = t *)
+    simpl. rewrite -> IHh. reflexivity.
+Qed.
 
 Theorem rev_app_distr: forall l1 l2 : natlist,
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2. induction l1 as [| h1 t1 IHh1].
+  - (* l1 = nil *)
+    simpl. rewrite -> app_nil_r. reflexivity.
+  - (* l1 = h1 :: t1, rev (t1 ++ l2) = rev l2 ++ rev t1 *)
+    simpl. rewrite -> IHh1. rewrite -> app_assoc. reflexivity.
+Qed.
 
 Theorem rev_involutive : forall l : natlist,
   rev (rev l) = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l. induction l as [| h t IHh].
+  - (* l = nil *)
+    reflexivity.
+  - (* l = h :: t, rev (rev t) = t *)
+    simpl. rewrite -> rev_app_distr. rewrite -> IHh. reflexivity.
+Qed.
 
 (** There is a short solution to the next one.  If you find yourself
     getting tangled up, step back and try to look for a simpler
@@ -873,7 +888,11 @@ Proof.
 Theorem app_assoc4 : forall l1 l2 l3 l4 : natlist,
   l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2 l3 l4.
+  induction l1 as [| h1 t1 IHh1].
+  - simpl. rewrite -> app_assoc. reflexivity.
+  - simpl. rewrite -> IHh1. reflexivity.
+Qed.
 
 (** An exercise about your implementation of [nonzeros]: *)
 
