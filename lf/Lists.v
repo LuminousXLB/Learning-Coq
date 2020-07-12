@@ -1004,7 +1004,23 @@ Qed.
 
     (There is a hard way and an easy way to do this.) *)
 
-(* FILL IN HERE *)
+Theorem rev_func: forall (l1 l2 : natlist),
+  l1 = l2 -> rev l1 = rev l2.
+Proof.
+  intros l1 l2 H.
+  rewrite -> H.
+  reflexivity.
+Qed.
+
+Theorem rev_injective: forall (l1 l2 : natlist),
+  rev l1 = rev l2 -> l1 = l2.
+Proof.
+  intros l1 l2 H.
+  rewrite <- (rev_involutive l1).
+  rewrite <- (rev_involutive l2).
+  replace (rev l1) with (rev l2).
+  reflexivity.
+Qed.
 
 (* Do not modify the following line: *)
 Definition manual_grade_for_rev_injective : option (nat*string) := None.
