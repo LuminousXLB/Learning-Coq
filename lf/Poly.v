@@ -814,7 +814,16 @@ Proof. reflexivity.  Qed.
 Theorem map_rev : forall (X Y : Type) (f : X -> Y) (l : list X),
   map f (rev l) = rev (map f l).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  assert (H: forall t:list X, forall h: X, map f (t ++ [h]) = map f (t) ++ [f h]). {
+    intros. induction t.
+    - reflexivity.
+    - simpl. rewrite -> IHt. reflexivity.
+  }
+  induction l as [| h t].
+  - reflexivity.
+  - simpl. rewrite -> H. rewrite -> IHt. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, recommended (flat_map)
@@ -830,13 +839,16 @@ Proof.
 *)
 
 Fixpoint flat_map {X Y: Type} (f: X -> list Y) (l: list X)
-                   : (list Y)
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+                   : (list Y) :=
+  match l with
+  | [] => []
+  | h :: t => (f h) ++ (flat_map f t)
+  end.
 
 Example test_flat_map1:
   flat_map (fun n => [n;n;n]) [1;5;4]
   = [1; 1; 1; 5; 5; 5; 4; 4; 4].
- (* FILL IN HERE *) Admitted.
+Proof. reflexivity.  Qed.
 (** [] *)
 
 (** Lists are not the only inductive type for which [map] makes sense.
