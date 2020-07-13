@@ -157,14 +157,14 @@ Inductive grumble (X:Type) : Type :=
 
 (** Which of the following are well-typed elements of [grumble X] for
     some type [X]?  (Add YES or NO to each line.)
-      - [d (b a 5)]
-      - [d mumble (b a 5)]
-      - [d bool (b a 5)]
-      - [e bool true]
-      - [e mumble (b c 0)]
-      - [e bool (b c 0)]
-      - [c]  *)
-(* FILL IN HERE *)
+      - [d (b a 5)]           No
+      - [d mumble (b a 5)]    Yes
+      - [d bool (b a 5)]      Yes
+      - [e bool true]         Yes
+      - [e mumble (b c 0)]    Yes
+      - [e bool (b c 0)]      No
+      - [c]                   No
+*)
 End MumbleGrumble.
 
 (* Do not modify the following line: *)
@@ -406,17 +406,31 @@ Definition list123''' := [1; 2; 3].
 Theorem app_nil_r : forall (X:Type), forall l:list X,
   l ++ [] = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X l. induction l as [| h t IHh].
+  - (* l = nil *)
+    reflexivity.
+  - (* l = h :: t, t ++ [ ] = t *)
+    simpl. rewrite -> IHh. reflexivity.
+  Qed.
 
 Theorem app_assoc : forall A (l m n:list A),
   l ++ m ++ n = (l ++ m) ++ n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X l m n. induction l as [| h t IHt].
+  - simpl. reflexivity.
+  - simpl. rewrite -> IHt. reflexivity.
+Qed.
 
 Lemma app_length : forall (X:Type) (l1 l2 : list X),
   length (l1 ++ l2) = length l1 + length l2.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  (* WORKED IN CLASS *)
+  intros X l1 l2. induction l1 as [| n l1' IHl1'].
+  - (* l1 = nil *)
+    reflexivity.
+  - (* l1 = cons *)
+    simpl. rewrite -> IHl1'. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (more_poly_exercises)
@@ -426,12 +440,22 @@ Proof.
 Theorem rev_app_distr: forall X (l1 l2 : list X),
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X l1 l2. induction l1 as [| h1 t1 IHh1].
+  - (* l1 = nil *)
+    simpl. rewrite -> app_nil_r. reflexivity.
+  - (* l1 = h1 :: t1, rev (t1 ++ l2) = rev l2 ++ rev t1 *)
+    simpl. rewrite -> IHh1. rewrite -> app_assoc. reflexivity.
+Qed.
 
 Theorem rev_involutive : forall X : Type, forall l : list X,
   rev (rev l) = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X l. induction l as [| h t IHh].
+  - (* l = nil *)
+    reflexivity.
+  - (* l = h :: t, rev (rev t) = t *)
+    simpl. rewrite -> rev_app_distr. rewrite -> IHh. reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
