@@ -744,7 +744,15 @@ Theorem nth_error_after_last: forall (n : nat) (X : Type) (l : list X),
      length l = n ->
      nth_error l n = None.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  generalize dependent n.
+  induction l.
+  - reflexivity.
+  - destruct n.
+    * intros H. discriminate H.
+    * simpl. intros H. apply IHl.
+      injection H as H. apply H.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -929,7 +937,16 @@ Theorem combine_split : forall X Y (l : list (X * Y)) l1 l2,
   split l = (l1, l2) ->
   combine l1 l2 = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction l as [| h t].
+  - (* l = [] *) intros.
+    unfold split in H. injection H as H1 H2.
+    rewrite <- H1. rewrite <- H2. reflexivity.
+  - (* l = h :: t *) intros.
+    destruct h as [h1 h2]. simpl in H.
+    destruct (split t) as [t1 t2] eqn:Eq. injection H as H1 H2.
+    rewrite <- H1. rewrite <- H2. simpl. apply f_equal.
+    apply IHt. reflexivity.
+Qed.
 (** [] *)
 
 (** The [eqn:] part of the [destruct] tactic is optional: We've chosen
