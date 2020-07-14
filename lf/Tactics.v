@@ -440,13 +440,13 @@ Proof.
     * discriminate H.
   - intros. destruct m as [| m'].
     * discriminate H.
-    * simpl in H.
+    * apply f_equal.
+      apply IHn'.
+      simpl in H.
       rewrite <- (plus_n_Sm n') in H.
       rewrite <- (plus_n_Sm m') in H.
       injection H as H'.
-      apply IHn' in H'.
-      rewrite H'.
-      reflexivity.
+      apply H'.
 Qed.
 (** [] *)
 
