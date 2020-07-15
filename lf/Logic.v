@@ -155,7 +155,12 @@ Qed.
 Example and_exercise :
   forall n m : nat, n + m = 0 -> n = 0 /\ m = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [][].
+  - intros. split. { reflexivity. }{ reflexivity. }
+  - intros. discriminate H.
+  - intros. discriminate H.
+  - intros. discriminate H.
+Qed.
 (** [] *)
 
 (** So much for proving conjunctive statements.  To go in the other
@@ -230,7 +235,9 @@ Proof.
 Lemma proj2 : forall P Q : Prop,
   P /\ Q -> Q.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros P Q [HP HQ].
+  apply HQ.
+Qed.
 (** [] *)
 
 (** Finally, we sometimes need to rearrange the order of conjunctions
@@ -246,7 +253,7 @@ Proof.
     - (* left *) apply HQ.
     - (* right *) apply HP.  Qed.
 
-(** **** Exercise: 2 stars, standard (and_assoc)  
+(** **** Exercise: 2 stars, standard (and_assoc)
 
     (In the following proof of associativity, notice how the _nested_
     [intros] pattern breaks the hypothesis [H : P /\ (Q /\ R)] down into
@@ -257,7 +264,12 @@ Theorem and_assoc : forall P Q R : Prop,
   P /\ (Q /\ R) -> (P /\ Q) /\ R.
 Proof.
   intros P Q R [HP [HQ HR]].
-  (* FILL IN HERE *) Admitted.
+  split.
+  - split.
+    * apply HP.
+    * apply HQ.
+  - apply HR.
+Qed.
 (** [] *)
 
 (** By the way, the infix notation [/\] is actually just syntactic
@@ -321,18 +333,26 @@ Qed.
 Lemma mult_eq_0 :
   forall n m, n * m = 0 -> n = 0 \/ m = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [][].
+  - intros. left. reflexivity.
+  - intros. left. reflexivity.
+  - intros. right. reflexivity.
+  - intros. discriminate H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (or_commut)  *)
 Theorem or_commut : forall P Q : Prop,
   P \/ Q  -> Q \/ P.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. destruct H as [HP | HQ].
+  - right. apply HP.
+  - left. apply HQ.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
-(** ** Falsehood and Negation 
+(** ** Falsehood and Negation
 
     So far, we have mostly been concerned with proving that certain
     things are _true_ -- addition is commutative, appending lists is
@@ -378,7 +398,7 @@ Proof.
     follows whatever you like"; this is another common name for the
     principle of explosion. *)
 
-(** **** Exercise: 2 stars, standard, optional (not_implies_our_not)  
+(** **** Exercise: 2 stars, standard, optional (not_implies_our_not)
 
     Show that Coq's definition of negation implies the intuitive one
     mentioned above: *)
@@ -386,7 +406,8 @@ Proof.
 Fact not_implies_our_not : forall (P:Prop),
   ~ P -> (forall (Q:Prop), P -> Q).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. apply H in H0. destruct H0.
+Qed.
 (** [] *)
 
 (** Inequality is a frequent enough example of negated statement
@@ -440,7 +461,7 @@ Proof.
   (* WORKED IN CLASS *)
   intros P H. unfold not. intros G. apply G. apply H.  Qed.
 
-(** **** Exercise: 2 stars, advanced (double_neg_inf)  
+(** **** Exercise: 2 stars, advanced (double_neg_inf)
 
     Write an informal proof of [double_neg]:
 
@@ -456,17 +477,23 @@ Definition manual_grade_for_double_neg_inf : option (nat*string) := None.
 Theorem contrapositive : forall (P Q : Prop),
   (P -> Q) -> (~Q -> ~P).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not. intros.
+  unfold not in H0. unfold not.
+  apply H0. apply H. apply H1.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (not_both_true_and_false)  *)
 Theorem not_both_true_and_false : forall P : Prop,
   ~ (P /\ ~P).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not. intros.
+  destruct H as [Hl Hr].
+  apply Hr. apply Hl.
+Qed.
 (** [] *)
 
-(** **** Exercise: 1 star, advanced (informal_not_PNP)  
+(** **** Exercise: 1 star, advanced (informal_not_PNP)
 
     Write an informal proof (in English) of the proposition [forall P
     : Prop, ~(P /\ ~P)]. *)
@@ -524,7 +551,7 @@ Proof. apply I. Qed.
 
 (** Unlike [False], which is used extensively, [True] is used quite
     rarely, since it is trivial (and therefore uninteresting) to prove
-    as a goal, and it carries no useful information as a hypothesis. 
+    as a goal, and it carries no useful information as a hypothesis.
 
     But it can be quite useful when defining complex [Prop]s using
     conditionals or as a parameter to higher-order [Prop]s.
@@ -566,7 +593,7 @@ Proof.
     intros H. rewrite H. intros H'. discriminate H'.
 Qed.
 
-(** **** Exercise: 1 star, standard, optional (iff_properties)  
+(** **** Exercise: 1 star, standard, optional (iff_properties)
 
     Using the above proof that [<->] is symmetric ([iff_sym]) as
     a guide, prove that it is also reflexive and transitive. *)
@@ -678,7 +705,7 @@ Proof.
   exists (2 + m).
   apply Hm.  Qed.
 
-(** **** Exercise: 1 star, standard, recommended (dist_not_exists)  
+(** **** Exercise: 1 star, standard, recommended (dist_not_exists)
 
     Prove that "[P] holds for all [x]" implies "there is no [x] for
     which [P] does not hold."  (Hint: [destruct H as [x E]] works on
@@ -690,7 +717,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 2 stars, standard (dist_exists_or)  
+(** **** Exercise: 2 stars, standard (dist_exists_or)
 
     Prove that existential quantification distributes over
     disjunction. *)
@@ -708,10 +735,10 @@ Proof.
     vocabulary for defining complex propositions from simpler ones.
     To illustrate, let's look at how to express the claim that an
     element [x] occurs in a list [l].  Notice that this property has a
-    simple recursive structure: 
+    simple recursive structure:
 
        - If [l] is the empty list, then [x] cannot occur on it, so the
-         property "[x] appears in [l]" is simply false. 
+         property "[x] appears in [l]" is simply false.
 
        - Otherwise, [l] has the form [x' :: l'].  In this case, [x]
          occurs in [l] if either it is equal to [x'] or it occurs in
@@ -792,7 +819,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, standard, recommended (All)  
+(** **** Exercise: 3 stars, standard, recommended (All)
 
     Recall that functions returning propositions can be seen as
     _properties_ of their arguments. For instance, if [P] has type
@@ -815,7 +842,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, standard (combine_odd_even)  
+(** **** Exercise: 3 stars, standard (combine_odd_even)
 
     Complete the definition of the [combine_odd_even] function below.
     It takes as arguments two properties of numbers, [Podd] and
@@ -1132,7 +1159,7 @@ Print Assumptions function_equality_ex2.
          forall (X Y : Type) (f g : X -> Y),
                 (forall x : X, f x = g x) -> f = g *)
 
-(** **** Exercise: 4 stars, standard (tr_rev_correct)  
+(** **** Exercise: 4 stars, standard (tr_rev_correct)
 
     One problem with the definition of the list-reversing function
     [rev] that we have is that it performs a call to [app] on each
@@ -1345,7 +1372,7 @@ Qed.
     example showing the complementary strengths of booleans and
     general propositions. *)
 
-(** **** Exercise: 2 stars, standard (logical_connectives)  
+(** **** Exercise: 2 stars, standard (logical_connectives)
 
     The following lemmas relate the propositional connectives studied
     in this chapter to the corresponding boolean operations. *)
@@ -1361,7 +1388,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 1 star, standard (eqb_neq)  
+(** **** Exercise: 1 star, standard (eqb_neq)
 
     The following theorem is an alternate "negative" formulation of
     [eqb_eq] that is more convenient in certain
@@ -1373,7 +1400,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, standard (eqb_list)  
+(** **** Exercise: 3 stars, standard (eqb_list)
 
     Given a boolean operator [eqb] for testing equality of elements of
     some type [A], we can define a function [eqb_list] for testing
@@ -1393,7 +1420,7 @@ Proof.
 (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 2 stars, standard, recommended (All_forallb)  
+(** **** Exercise: 2 stars, standard, recommended (All_forallb)
 
     Recall the function [forallb], from the exercise
     [forall_exists_challenge] in chapter [Tactics]: *)
@@ -1415,7 +1442,7 @@ Proof.
 (** Are there any important properties of the function [forallb] which
     are not captured by this specification? *)
 
-(* FILL IN HERE 
+(* FILL IN HERE
 
     [] *)
 
@@ -1532,7 +1559,7 @@ Qed.
     this line of reasoning cannot be encoded in Coq without assuming
     additional axioms. *)
 
-(** **** Exercise: 3 stars, standard (excluded_middle_irrefutable)  
+(** **** Exercise: 3 stars, standard (excluded_middle_irrefutable)
 
     Proving the consistency of Coq with the general excluded middle
     axiom requires complicated reasoning that cannot be carried out
@@ -1551,7 +1578,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 3 stars, advanced (not_exists_dist)  
+(** **** Exercise: 3 stars, advanced (not_exists_dist)
 
     It is a theorem of classical logic that the following two
     assertions are equivalent:
@@ -1572,7 +1599,7 @@ Proof.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
-(** **** Exercise: 5 stars, standard, optional (classical_axioms)  
+(** **** Exercise: 5 stars, standard, optional (classical_axioms)
 
     For those who like a challenge, here is an exercise taken from the
     Coq'Art book by Bertot and Casteran (p. 123).  Each of the
@@ -1596,7 +1623,7 @@ Definition de_morgan_not_and_not := forall P Q:Prop,
 Definition implies_to_or := forall P Q:Prop,
   (P->Q) -> (~P\/Q).
 
-(* FILL IN HERE 
+(* FILL IN HERE
 
     [] *)
 
