@@ -1780,8 +1780,29 @@ Definition de_morgan_not_and_not := forall P Q:Prop,
 Definition implies_to_or := forall P Q:Prop,
   (P->Q) -> (~P\/Q).
 
-(* FILL IN HERE
+Theorem excluded_middle_2_double_negation_elimination:
+  excluded_middle -> double_negation_elimination.
+Proof.
+  unfold excluded_middle, double_negation_elimination. intros Ax P.
+  destruct Ax with (P := P) as [Hp | Hnp]; intros.
+  - apply Hp.
+  - unfold not in H. destruct H. unfold not in Hnp. apply Hnp.
+Qed.
 
-    [] *)
+Theorem implies_to_or_2_excluded_middle:
+  implies_to_or -> excluded_middle.
+Proof.
+  unfold excluded_middle, implies_to_or. intros Ax P.
+  apply or_commut. apply Ax. intros. apply H.
+Qed.
+
+Theorem excluded_middle_2_implies_to_or:
+  excluded_middle -> implies_to_or.
+Proof.
+  unfold excluded_middle, implies_to_or. intros Ax P Q.
+  destruct (Ax P) as [Hp | Hnp]; intros.
+  - right. apply H. apply Hp.
+  - left. apply Hnp.
+Qed.
 
 (* Wed Jan 9 12:02:45 EST 2019 *)
