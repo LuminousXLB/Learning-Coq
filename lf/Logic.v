@@ -1316,8 +1316,15 @@ Theorem evenb_double_conv : forall n,
   exists k, n = if evenb n then double k
                 else S (double k).
 Proof.
-  (* Hint: Use the [evenb_S] lemma from [Induction.v]. *)
-  (* FILL IN HERE *) Admitted.
+  Check evenb_S.
+  induction n.
+  - simpl. exists 0. reflexivity.
+  - rewrite evenb_S. destruct (evenb n).
+    * simpl. destruct IHn as [k0 H0]. rewrite -> H0.
+      exists k0. reflexivity.
+    * simpl. destruct IHn as [k0 H0]. rewrite -> H0.
+      exists (S k0). reflexivity.
+Qed.
 (** [] *)
 
 Theorem even_bool_prop : forall n,
@@ -1475,12 +1482,28 @@ Qed.
 Lemma andb_true_iff : forall b1 b2:bool,
   b1 && b2 = true <-> b1 = true /\ b2 = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [] b2.
+  - simpl. split.
+    * intros. split.
+      + reflexivity.
+      + apply H.
+    * intros []. apply H0.
+  - simpl. split.
+    * intros. discriminate H.
+    * intros []. discriminate H.
+Qed.
 
 Lemma orb_true_iff : forall b1 b2,
   b1 || b2 = true <-> b1 = true \/ b2 = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b1 b2 ; destruct b1 eqn:Eb ; split ; simpl.
+  - intros. left. reflexivity.
+  - intros. reflexivity.
+  - intros. right. apply H.
+  - intros [].
+    * discriminate H.
+    * apply H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (eqb_neq)
@@ -1492,7 +1515,12 @@ Proof.
 Theorem eqb_neq : forall x y : nat,
   x =? y = false <-> x <> y.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros x y. unfold not. split.
+  - intros Hne Heq. apply eqb_eq in Heq. rewrite Heq in Hne. discriminate Hne.
+  - intros Hne. destruct (x =? y) eqn:E.
+    * apply eqb_eq in E. apply Hne in E. destruct E.
+    * reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (eqb_list)
@@ -1504,15 +1532,34 @@ Proof.
     definition is correct, prove the lemma [eqb_list_true_iff]. *)
 
 Fixpoint eqb_list {A : Type} (eqb : A -> A -> bool)
-                  (l1 l2 : list A) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+                  (l1 l2 : list A) : bool :=
+  match l1, l2 with
+  | []       , []       => true
+  | []       , _        => false
+  | _        , []       => false
+  | h1 :: t1 , h2 :: t2 => (eqb h1 h2) && (eqb_list eqb t1 t2)
+  end.
 
 Lemma eqb_list_true_iff :
   forall A (eqb : A -> A -> bool),
     (forall a1 a2, eqb a1 a2 = true <-> a1 = a2) ->
     forall l1 l2, eqb_list eqb l1 l2 = true <-> l1 = l2.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros A eqb He. induction l1 as [|a1 l1 IHl].
+  - destruct l2 as [|a2 l2]; split; simpl; intros.
+    * reflexivity.
+    * reflexivity.
+    * discriminate H.
+    * discriminate H.
+  - destruct l2 as [|a2 l2]; split; simpl; intros.
+    * discriminate H.
+    * discriminate H.
+    * apply andb_true_iff in H. destruct H as [Ha Hl].
+      apply He in Ha. apply IHl in Hl. rewrite Ha, Hl. reflexivity.
+    * apply andb_true_iff. injection H as Ha Hl. split.
+      + apply He. apply Ha.
+      + apply IHl. apply Hl.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, recommended (All_forallb)
@@ -1532,7 +1579,14 @@ Fixpoint forallb {X : Type} (test : X -> bool) (l : list X) : bool :=
 Theorem forallb_true_iff : forall X test (l : list X),
    forallb test l = true <-> All (fun x => test x = true) l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction l as [|h t] ; simpl.
+  - split ; intros ; reflexivity.
+  - rewrite andb_true_iff. split ; intros H ; destruct H as [Hh Ht].
+    * rewrite <- IHt.
+      rewrite Hh, Ht. split ; reflexivity.
+    * rewrite <- IHt in Ht.
+      rewrite Hh, Ht. split ; reflexivity.
+Qed.
 
 (** Are there any important properties of the function [forallb] which
     are not captured by this specification? *)
